@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.model.TeamMapper">
+
+<delete id="delete" parameterType="int">
+	delete from team
+	where teamno = #{teamno}
+</delete>
+
+<update id="update" parameterType="com.model.TeamDTO">
+	update team
+	set 
+		tname = #{tname},
+		skill = #{skill},
+		phonenum = #{phonenum},
+		address= #{address}, 
+		zipcode= #{zipcode}, 
+		gender= #{gender}
+	where teamno = #{teamno}
+</update>
+
+<select id="read" parameterType="int" resultType="com.model.TeamDTO">
+	select * from team
+	where teamno = #{teamno}
+</select>
+
+<insert id="create" parameterType="com.model.TeamDTO">
+	INSERT INTO team
+	(tname, skill, phonenum, address, zipcode, gender, rdate)
+	VALUES
+	(#{tname}, #{skill}, #{phonenum}, #{address}, #{zipcode}, #{gender}, now())
+</insert>
+
+<select id="list" parameterType="Map" resultType="com.model.TeamDTO">
+	SELECT teamno, tname, skill, phonenum, address, zipcode, gender, rdate
+	FROM team
+ <where>
+ 	<if test="col=='tname'">
+ 		tname like concat('%',#{word},'%')
+ 	</if>
+ 	<if test="col=='skill'">
+ 		skill like concat('%',#{word},'%')
+ 	</if>
+ 	<if test="col=='phonenum'">
+ 		phonenum like concat('%',#{word},'%')
+ 	</if>
+	<if test="col=='gender'">
+ 		gender like concat('%',#{word},'%')
+ 	</if>
+ </where>
+ ORDER BY teamno DESC
+ limit #{sno}, #{eno}
+ </select>
+ 
+<!-- 검색 종류? -->
+ <select id="total" parameterType="Map" resultType="int">
+	select count(*) from team
+ <where>
+ 	<if test="col=='tname'">
+ 		tname like concat('%',#{word},'%')
+ 	</if>
+ 	<if test="col=='skill'">
+ 		skill like concat('%',#{word},'%')
+ 	</if>
+ 	<if test="col=='phonenum'">
+ 		phonenum like concat('%',#{word},'%')
+ 	</if>
+ 	<if test="col=='gender'">
+ 		gender like concat('%',#{word},'%')
+ 	</if>
+ 	
+ </where>
+</select>
+</mapper>
